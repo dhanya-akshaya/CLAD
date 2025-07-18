@@ -1,0 +1,73 @@
+import random
+
+def wumpus_world():
+
+    size = 4
+    player = [3, 0]
+    wumpus = [random.randint(0, size-1), random.randint(0, size-1)]
+    gold = [random.randint(0, size-1), random.randint(0, size-1)]
+    pit = [random.randint(0, size-1), random.randint(0, size-1)]
+
+    while len({tuple(player), tuple(wumpus), tuple(gold), tuple(pit)}) < 4:
+        wumpus = [random.randint(0, size-1), random.randint(0, size-1)]
+        gold = [random.randint(0, size-1), random.randint(0, size-1)]
+        pit = [random.randint(0, size-1), random.randint(0, size-1)]
+
+    def hints(pos):
+        indicators = []
+        if abs(pos[0] - wumpus[0]) + abs(pos[1] - wumpus[1]) == 1:
+            indicators.append("stench")
+        if abs(pos[0] - pit[0]) + abs(pos[1] - pit[1]) == 1:
+            indicators.append("breeze")
+        if pos == gold:
+            indicators.append("glitter")
+        return indicators
+
+    def board():
+        grid = [['.' for _ in range(size)] for _ in range(size)]
+
+        for i in range(size):
+            for j in range(size):
+                pos = [i, j]
+                indicators = hints(pos)
+                if pos == player:
+                    grid[i][j] = 'A'
+                elif 'glitter' in indicators:
+                    grid[i][j] = 'G'
+                elif 'stench' in indicators:
+                    grid[i][j] = 'S'
+                elif 'breeze' in indicators:
+                    grid[i][j] = 'B'
+
+        for row in grid:
+            print(" | ".join(row))
+        print()
+
+
+    while True:
+        board()
+
+        if player == wumpus:
+            print("XXXXX Oh no! You've encountered the Wumpus! Game Over!! XXXXX")
+            break
+        elif player == pit:
+            print("XXXXX You fell into a pit! Game Over!! XXXXX")
+            break
+        elif player == gold:
+            print("$$$$$ You found the gold! You Won!! $$$$$")
+            break
+
+        move = input("Enter your move (up, down, left, right): ").strip().lower()
+
+        if move == "up" and player[0] > 0:
+            player[0] -= 1
+        elif move == "down" and player[0] < size - 1:
+            player[0] += 1
+        elif move == "left" and player[1] > 0:
+            player[1] -= 1
+        elif move == "right" and player[1] < size - 1:
+            player[1] += 1
+        else:
+            print("Invalid move. Try again.")
+
+wumpus_world()
