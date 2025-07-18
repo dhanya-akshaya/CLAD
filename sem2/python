@@ -1,0 +1,226 @@
+PROBLEM STATEMENT
+1. Determine the count of customers whose 'CreditScore' is greater than or
+equal to 800.
+2. Display the 'CustomerId's of all female customers from Spain with a 'CreditScore' greater than 650.
+3. Display the surnames of customers who chose to exit(1) from credit card
+usage without clearing their balance amount.
+4. Display the surnames of male customers who opted to exit(1) from credit card usage, had a salary greater than 100000, and cleared their
+balance.
+5. Determine whether male or female customers, who possess credit cards issued from France, exhibit higher activity levels.
+6. Identify the geography with the highest count of customers under 30 years old, using credit cards and earning less than $100,000.
+STEPS TO SOLVE THE PROBLEM
+Step 1: Load csv file into dataframe using pandas.read_csv() method
+Step 2: Remove all null valued rows from dataframe using dropna() method
+Step 3: Find how many customers have a credit score of 800 or higher.
+Step 4: Show the IDs of female customers from Spain with a credit score above 650.
+Step 5: List the last names of customers who quit using their credit cards without paying off their balance.
+Step 6: Show the last names of male customers who quit using their credit cards, had a salary over $100,000, and paid off their balance
+Step 7: Decide if male or female customers with credit cards from France are more active.
+Step 8: Identify the location with the most customers under 30, using credit cards, and earning less than $100,000.
+
+CODE
+import pandas as pd
+df=pd.read_csv("/content/Customer.csv")
+#'CreditScore' is greater than or equal to 800.
+c=0
+for i in df.index:
+if df.loc[i,'CreditScore']>=800:
+c+=1
+print("\nCredit score:",c)
+print("\n*******************************************************************************")
+#'CustomerId's of all female customers from Spain with a 'CreditScore' greater than 650.
+df1=df[(df['CreditScore']>650) & (df['Gender']=='Female') & (df['Geography']=='Spain')]
+print(df1['CustomerId'])
+print("\n*******************************************************************************")
+#surnames of customers who chose to exit(1) from credit card usage without clearing their balance amount.
+df1=df[(df['Exited']==1) & (df['Balance']!=0)]
+print(df1['Surname'])
+print("\n*******************************************************************************")
+#the surnames of male customers who opted to exit(1) from credit card usage, had a salary greater than 100000, and cleared their balance
+df1=df[(df['Exited']==1) & (df['Balance']==0) & (df['EstimatedSalary']>100000) & (df['Gender']=='Male') & (df['HasCrCard'])==1]
+print(df1['Surname'])
+print("\n*******************************************************************************")
+#male or female customers, who possess credit cards issued from France, exhibit higher activity levels
+df1=df[(df['Geography']=='France') & (df['HasCrCard']==1) & (df['IsActiveMember']==1) ]
+g=df1.groupby(df1['Gender']).size()
+if g['Male']!=g['Female']:
+print(g.idxmax(),"are active members")
+else:
+print("Both Male and Female are active members")
+print("\n*******************************************************************************")
+#the geography with the highest count of customers under 30 years old, using credit cards and earning less than $100,000.
+df1=df[(df['Age']<30) & (df['HasCrCard']==1) & (df['EstimatedSalary']<100000)]
+g=df1.groupby(df1['Geography']).size()
+print(g.idxmax())
+print("\n*******************************************************************************")
+Credit score: 655
+*******************************************************************************
+4 15737888
+34 15732963
+44 15684171
+72 15812518
+85 15805254
+ ...
+9897 15810563
+9899 15811594
+9904 15722532
+9912 15655903
+9939 15808971
+Name: CustomerId, Length: 558, dtype: int64
+*******************************************************************************
+2 Onio
+5 Chu
+7 Obinna
+16 Romeo
+35 Lombardo
+ ...
+9975 Smith
+9981 Burbidge
+9982 Griffin
+9991 Ajuluchukwu
+9998 Sabbatini
+Name: Surname, Length: 1537, dtype: object
+*******************************************************************************
+11 Andrews
+143 Greeves
+208 Hackett
+279 K'ung
+306 Hewitt
+ ...
+9210 Watts
+9220 Trentino
+9276 Griffin
+9466 Clarke
+9784 Zhirov
+Name: Surname, Length: 82, dtype: object
+*******************************************************************************
+Male are active members
+*******************************************************************************
+France
+*******************************************************************************
+
+
+
+ TITANIC CASE STUDY
+PROBLEM STATEMENT
+1. Remove all null valued rows from DataFrame.
+2. Determine the count of customers who survived the Titanic accident.
+3. Count the customers who survived the Titanic accident and embarked (boarded) from "Q": Queenstown (now known as Cobh), Ireland.
+4. Count the customers who did not survive the Titanic accident and were less than 20 years old.
+5. Count the total number of male and female passengers, aged over 50, who did not survive and embarked from "S": Southampton, England,
+as well as "C": Cherbourg, France.
+6. Count the passengers who boarded the Titanic from "S": Southampton, England, and "Q": Queenstown (now known as Cobh), Ireland, with
+family members and did not survive the accident. "C": Cherbourg, France.
+(*If 'Parch' > 0 indicates that the passenger boarded the ship with family members).
+STEPS TO SOLVE
+Step 1: Load csv file into dataframe using pandas.read_csv() method
+Step 2: Remove all null valued rows from dataframe using dropna() method
+Step 3: Find the count of customers who survived the Titanic accident.
+Step 4: Count the customers who survived the Titanic accident and boarded from Queenstown, Ireland.
+Step 5: Count the customers who did not survive the Titanic accident and were less than 20 years old.
+Step 6: Count the total number of male and female passengers, aged over 50, who did not survive and boarded from Southampton, England,
+and Cherbourg, France.
+Step 7: Count the passengers who boarded from Southampton, England, and Queenstown, Ireland, with family members and did not survive the
+accident.
+
+CODE
+import pandas as pd
+df=pd.read_csv("/content/titanic.csv")
+#Remove all null valued rows from DataFrame.
+df1=df.dropna()
+print(df1)
+print("\n*******************************************************************************")
+#The count of customers who survived the Titanic accident.
+c=0
+for i in df1.index:
+if df1.loc[i,'Survived']==1:
+c+=1
+print("Customers who survived the Titanic accident: ",end="")
+print(c)
+print("\n*******************************************************************************")
+#The customers who survived the Titanic accident and embarked (boarded) from "Q": Queenstown (now known as Cobh), Ireland.
+c=0
+for i in df1.index:
+if df1.loc[i,'Survived']==1:
+print("Customers who survived the Titanic accident and boarded from 'Q': ",end="")
+print(c)
+print("\n*******************************************************************************")
+#The customers who did not survive the Titanic accident and were less than 20 years old.
+print("\n*******************************************************************************")
+# The total number of male and female passengers, aged over 50, who did not survive and embarked from "S": Southampton, England, as well
+if df1.loc[i,'Embarked']=='Q':
+c+=1
+c=0
+for i in df1.index:
+if df1.loc[i,'Survived']==0:
+if df1.loc[i,'Age']<20:
+c+=1
+print("customers who did not survive the Titanic accident and were less than 20 years old: ",end="")
+print(c)
+print("\n*******************************************************************************")
+c=0
+for i in df1.index:
+if df1.loc[i,'Survived']==0:
+if df1.loc[i,'Age']>50:
+#The passengers who boarded the Titanic from "S": Southampton, England, and "Q": Queenstown (now known as Cobh), Ireland, with family mem
+if df1.loc[i,'Embarked']=='S' or 'C':
+c+=1
+print(c)
+print("number of male and female passengers, aged over 50, who did not survive and embarked from 'S' , 'C': ",end="")
+for i in df1.index:
+if df1.loc[i,'Survived']==0:
+if df1.loc[i,'Parch']>0:
+if df1.loc[i,'Embarked']=='S' or df1.loc[i,'Embarked']=='Q':
+c+=1
+print("passengers who boarded the Titanic from 'S','Q' and did not survive the accident: ",end="")
+print(c)
+c=0
+print("\n*******************************************************************************")
+ PassengerId Survived Pclass \
+1 2 1 1
+3 4 1 1
+6 7 0 1
+10 11 1 3
+11 12 1 1
+.. ... ... ...
+871 872 1 1
+872 873 0 1
+879 880 1 1
+887 888 1 1
+889 890 1 1
+
+1 Cumings, Mrs. John Bradley (Florence Briggs Th... female 38.0 1
+3 Futrelle, Mrs. Jacques Heath (Lily May Peel) female 35.0 1
+6 McCarthy, Mr. Timothy J male 54.0 0
+10 Sandstrom, Miss. Marguerite Rut female 4.0 1
+11 Bonnell, Miss. Elizabeth female 58.0 0
+.. ... ... ... ...
+871 Beckwith, Mrs. Richard Leonard (Sallie Monypeny) female 47.0 1
+872 Carlsson, Mr. Frans Olof male 33.0 0
+879 Potter, Mrs. Thomas Jr (Lily Alexenia Wilson) female 56.0 0
+887 Graham, Miss. Margaret Edith female 19.0 0
+889 Behr, Mr. Karl Howell male 26.0 0
+ Parch Ticket Fare Cabin Embarked
+1 0 PC 17599 71.2833 C85 C
+3 0 113803 53.1000 C123 S
+6 0 17463 51.8625 E46 S
+10 1 PP 9549 16.7000 G6 S
+11 0 113783 26.5500 C103 S
+.. ... ... ... ... ...
+871 1 11751 52.5542 D35 S
+872 0 695 5.0000 B51 B53 B55 S
+879 1 11767 83.1583 C50 C
+887 0 112053 30.0000 B42 S
+889 0 111369 30.0000 C148 C
+[183 rows x 12 columns]
+*******************************************************************************
+Customers who survived the Titanic accident: 123
+*******************************************************************************
+Customers who survived the Titanic accident and boarded from 'Q': 1
+*******************************************************************************
+customers who did not survive the Titanic accident and were less than 20 years old: 6
+*******************************************************************************
+number of male and female passengers, aged over 50, who did not survive and embarked from 'S' , 'C': 16
+*******************************************************************************
+passengers who boarded the Titanic from 'S','Q' and did not survive the accident: 12
+*******************************************************************************
